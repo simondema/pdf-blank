@@ -1,0 +1,26 @@
+{
+  "name": "pb-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/app.js",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "tsc && node addShebang.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Simone De Matteis",
+  "license": "Apache-2.0",
+  "bin": {
+    "pb": "./dist/app.js"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "pdf-lib": "^1.17.1",
+    "yargs": "17.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@types/yargs": "^17.0.32"
+  }
+}
