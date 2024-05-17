@@ -32,34 +32,3 @@ export async function writeBlankPages(
 
   await savePdf(outputPath, manipulatedPDF);
 }
-
-export async function writeMultiplePages(
-  inputPath: string,
-  outputPath: string
-): Promise<void> {
-  const originalPDF = await loadPdf(inputPath);
-  const manipulatedPDF = await PDFDocument.create();
-
-  // Create a new PDF with only A4 pages
-  // each new page will be the result of joining 3 pages from the original PDF
-  // the structure of the page will be the following:
-  /* 1 empty
-     2 empty
-     3 empty
-  */
-
-  for (let i = 0; i < originalPDF.getPageCount(); i += 3) {
-    const [copiedPage1] = await manipulatedPDF.copyPages(originalPDF, [i]);
-    const [copiedPage2] = await manipulatedPDF.copyPages(originalPDF, [i + 1]);
-    const [copiedPage3] = await manipulatedPDF.copyPages(originalPDF, [i + 2]);
-
-    const page = manipulatedPDF.addPage([A4_PAGE_WIDTH, A4_PAGE_HEIGHT]);
-
-    const { width, height } = copiedPage1.getSize();
-    const scale = A4_PAGE_WIDTH / width;
-
-    // draw the first page as image
-  }
-
-  await savePdf(outputPath, manipulatedPDF);
-}

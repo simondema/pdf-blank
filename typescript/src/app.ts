@@ -17,24 +17,13 @@ async function main() {
       type: "string",
       demandOption: true,
       describe: "output file",
-    })
-    .option("multi", {
-      alias: "m",
-      type: "boolean",
-      required: false,
-      describe: "multiple layout",
     }).argv;
 
   const inputPath = argv.input;
   const outputPath = argv.output;
-  const multi = argv.multi ?? false;
   logger.info("input: ", inputPath);
   logger.info("output: ", outputPath);
-  if (!multi) {
-    await Utilities.writeBlankPages(inputPath, outputPath);
-  } else {
-    await Utilities.writeMultiplePages(inputPath, outputPath);
-  }
+  await Utilities.writeBlankPages(inputPath, outputPath);
 }
 
 main();
