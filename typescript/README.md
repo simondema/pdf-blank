@@ -1,6 +1,6 @@
-# PdfBlank
+# Typescript
 
-A simple utility written in NodeJS to add a blank page after each page in the PDF file received as input.
+A simple utility written in NodeJS to add a blank page after each page in the PDF file received as input. Using pdf-lib.
 It could be useful to take side-notes on the PDF file if printed in 2x3 format.
 
 ## Install
