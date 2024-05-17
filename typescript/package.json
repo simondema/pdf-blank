@@ -6,6 +6,7 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "tsc && node addShebang.js",
+    "pkg": "npm run clean && npm run build && npm install -g .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "fs": "^0.0.1-security",
+    "log4js": "^6.9.1",
     "pdf-lib": "^1.17.1",
     "yargs": "17.7.2"
   },
