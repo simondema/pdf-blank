@@ -4,8 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
-import org.apache.logging.log4j.core.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
+import me.tongfei.progressbar.ProgressBarStyle;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSFloat;
@@ -24,6 +23,7 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -40,12 +40,12 @@ public class PdfBoxUtility {
         }
         if (outputPath.toFile().exists()) {
             // delete the file if it already exists
-            outputPath.toFile().delete();
+            Files.delete(outputPath);
         }
 
         try (PDDocument outputPdf = new PDDocument(); PDDocument inputPdf = Loader.loadPDF(inputPath.toFile())) {
             int nPages = inputPdf.getNumberOfPages();
-            try (ProgressBar pb = new ProgressBarBuilder().setTaskName("blanking").setInitialMax(nPages).build()) {
+            try (ProgressBar pb = new ProgressBarBuilder().setStyle(ProgressBarStyle.ASCII).setTaskName("blanking").setInitialMax(nPages).build()) {
                 for (int i = 0; i < nPages; i++) {
                     outputPdf.addPage(inputPdf.getPage(i));
                     float width = inputPdf.getPage(i).getMediaBox().getWidth();
@@ -71,14 +71,14 @@ public class PdfBoxUtility {
         }
 
         if (outputPath.toFile().exists()) {
-            outputPath.toFile().delete();
+            Files.delete(outputPath);
         }
 
         try (PDDocument inputPdf = Loader.loadPDF(inputPath.toFile()); PDDocument outputPdf = new PDDocument()) {
             PDFRenderer pdfRenderer = new PDFRenderer(inputPdf);
             PDPageContentStream contentStream;
             int nPages = inputPdf.getNumberOfPages();
-            try (ProgressBar pb = new ProgressBarBuilder().setTaskName("merging").setInitialMax(nPages).build()) {
+            try (ProgressBar pb = new ProgressBarBuilder().setStyle(ProgressBarStyle.ASCII).setTaskName("merging").setInitialMax(nPages).build()) {
                 for (int i = 0; i < nPages; i += 6) {
                     PDPage newPage = new PDPage(PDRectangle.A4);
                     contentStream = new PDPageContentStream(outputPdf, newPage);
@@ -101,7 +101,7 @@ public class PdfBoxUtility {
                 }
 
 
-                inputPath.toFile().delete();
+                Files.delete(inputPath);
                 outputPdf.save(outputPath.toFile());
 
             } catch (IOException e) {
@@ -124,14 +124,14 @@ public class PdfBoxUtility {
         }
 
         if (outputPath.toFile().exists()) {
-            outputPath.toFile().delete();
+            Files.delete(outputPath);
         }
 
         try (PDDocument inputPdf = Loader.loadPDF(inputPath.toFile()); PDDocument outputPdf = new PDDocument()) {
             FontUtility.loadFonts(outputPdf);
 
             int nPages = inputPdf.getNumberOfPages();
-            try (ProgressBar pb = new ProgressBarBuilder().setTaskName("annotating").setInitialMax(nPages).build()) {
+            try (ProgressBar pb = new ProgressBarBuilder().setStyle(ProgressBarStyle.ASCII).setTaskName("annotating").setInitialMax(nPages).build()) {
                 for (int i = 0; i < nPages; i++) {
                     PDPage page = inputPdf.getPage(i);
                     PDAnnotation annotation = new PDAnnotationFreeText();
@@ -156,7 +156,7 @@ public class PdfBoxUtility {
             }
 
             if (inputPath.toFile().exists()) {
-                inputPath.toFile().delete();
+                Files.delete(inputPath);
             }
             outputPdf.save(outputPdfPath);
         }
