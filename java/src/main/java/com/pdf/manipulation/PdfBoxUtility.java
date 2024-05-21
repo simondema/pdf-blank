@@ -45,12 +45,27 @@ public class PdfBoxUtility {
 
         try (PDDocument outputPdf = new PDDocument(); PDDocument inputPdf = Loader.loadPDF(inputPath.toFile())) {
             int nPages = inputPdf.getNumberOfPages();
+            PDFRenderer pdfRenderer = new PDFRenderer(inputPdf);
             try (ProgressBar pb = new ProgressBarBuilder().setStyle(ProgressBarStyle.ASCII).setTaskName("blanking").setInitialMax(nPages).build()) {
                 for (int i = 0; i < nPages; i++) {
-                    outputPdf.addPage(inputPdf.getPage(i));
-                    float width = inputPdf.getPage(i).getMediaBox().getWidth();
-                    float height = inputPdf.getPage(i).getMediaBox().getHeight();
-                    outputPdf.addPage(new PDPage(new PDRectangle(width, height)));
+                    BufferedImage bim = pdfRenderer.renderImageWithDPI(i, 300, ImageType.RGB);
+                    PDImageXObject pdImage = LosslessFactory.createFromImage(outputPdf, bim);
+
+                    PDPage newPage = new PDPage(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
+                    float scale = Math.min(newPage.getMediaBox().getWidth() / pdImage.getWidth(), newPage.getMediaBox().getHeight() / pdImage.getHeight());
+
+                    PDPageContentStream contentStream = new PDPageContentStream(outputPdf, newPage);
+
+                    // center the image on the page
+                    float x = (newPage.getMediaBox().getWidth() - pdImage.getWidth() * scale) / 2;
+                    float y = (newPage.getMediaBox().getHeight() - pdImage.getHeight() * scale) / 2;
+
+                    contentStream.drawImage(pdImage, x, y, pdImage.getWidth() * scale, pdImage.getHeight() * scale);
+                    contentStream.close();
+                    outputPdf.addPage(newPage);
+
+                    outputPdf.addPage(new PDPage(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth())));
+
                     pb.stepBy(i);
                 }
                 outputPdf.save(outputPdfPath);
@@ -87,7 +102,9 @@ public class PdfBoxUtility {
                         if (i + j < inputPdf.getNumberOfPages()) {
                             BufferedImage bim = pdfRenderer.renderImageWithDPI(i + j, 300, ImageType.RGB);
                             PDImageXObject pdImage = LosslessFactory.createFromImage(outputPdf, bim);
+
                             float scale = 0.08f;
+
                             float xPosition = (j % 2 == 0) ? 0 : newPage.getMediaBox().getWidth() / 2;
                             float yPosition = newPage.getMediaBox().getHeight() / 3 * (2 - ((float) j / 2));
                             float yOffset = 60.0f;
