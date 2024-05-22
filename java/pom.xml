@@ -2,18 +2,18 @@
     xmlns="http://maven.apache.org/POM/4.0.0"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.pdf.manipulation</groupId>
+    <groupId>com.pdf.swissknife</groupId>
     <artifactId>pdf-swissknife</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Archetype - pdf-manipulation-java</name>
+    <name>Archetype - pdf-swissknife-java</name>
     <url>http://maven.apache.org</url>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <mainClass>com.pdf.manipulation.PdfHandler</mainClass>
+        <mainClass>com.pdf.swissknife.PdfHandler</mainClass>
         <native.maven.plugin.version>0.9.12</native.maven.plugin.version>
         <junit.jupiter.version>5.8.1</junit.jupiter.version>
-        <imageName>pdf-manipulation</imageName>
+        <imageName>pdf-swissknife</imageName>
     </properties>
 
     <dependencies>
@@ -60,6 +60,8 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
+                    <finalName>${project.artifactId}</finalName>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
@@ -71,21 +73,18 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.6.1</version>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <configuration>
+                    <finalName>${project.artifactId}</finalName>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>copy-dependencies</goal>
+                            <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

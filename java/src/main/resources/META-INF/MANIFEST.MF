@@ -1,1 +1,1 @@
-Main-Class: com.pdf.manipulation.PdfManipulation
+Main-Class: com.pdf.swissknife.PdfHandler

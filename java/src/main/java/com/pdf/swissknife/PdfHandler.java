@@ -1,4 +1,4 @@
-package com.pdf.manipulation;
+package com.pdf.swissknife;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -20,16 +20,12 @@ public class PdfHandler {
         }
 
         for (int i = 0; i < args.length; i++) {
-            switch (args[i]) {
-                case "-i":
-                    inputPdfPath = args[i + 1];
-                    break;
-                case "-o":
-                    outputPdfPath = args[i + 1];
-                    break;
-                case "-op":
-                    operation = args[i + 1];
-                    break;
+            if (args[i].equals("-i")) {
+                inputPdfPath = args[i + 1];
+            } else if (args[i].equals("-o")) {
+                outputPdfPath = args[i + 1];
+            } else if (args[i].equals("-op")) {
+                operation = args[i + 1];
             }
         }
 

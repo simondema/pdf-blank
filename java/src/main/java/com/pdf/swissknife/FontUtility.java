@@ -1,4 +1,4 @@
-package com.pdf.manipulation;
+package com.pdf.swissknife;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
